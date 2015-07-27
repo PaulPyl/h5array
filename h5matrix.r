@@ -55,8 +55,18 @@ setMethod("[",
 
 setMethod("[<-",
           signature(x = "h5matrix", i = "ANY", j = "ANY"),
-          function(x, i = NULL, j = NULL, ..., value){
-            idx <- list(i,j)
+          function(x, i, j, ..., value){
+            idx <- vector("list", 2)
+            if(!missing(i)){
+              idx[[1]] <- i
+            }else{
+              i <- NULL
+            }
+            if(!missing(j)){
+              idx[[2]] <- j
+            }else{
+              j <- NULL
+            }
             if(is.null(dim(value))){ #Only one value was specified
               vdim <- dim(x)
               vdim[!sapply(idx, is.null)] <- sapply(idx[!sapply(idx, is.null)], length)

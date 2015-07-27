@@ -2,13 +2,24 @@
 # I would hope there is a more elegant way of replacing any missing argument with a NULL in the index and making sure that the dimensions fit :(
 setMethod("[",
           signature(x = "h5array", i = "ANY", j = "ANY"),
-          function(x, i = NULL, j = NULL, ..., drop = TRUE){
+          function(x, i, j, ..., drop = TRUE){
             symbols <- sapply(dots(...), deparse)
             if(length(symbols) + 2 != length(dim(x))){
               stop("incorrect number of dimensions")
             }
             theDots <- dots(...)
-            idx <- c( list(i,j), lapply(seq_along(theDots), function(argPos){
+            idx <- vector("list", 2)
+            if(!missing(i)){
+              idx[[1]] <- i
+            }else{
+              i <- NULL
+            }
+            if(!missing(j)){
+              idx[[2]] <- j
+            }else{
+              j <- NULL
+            }
+            idx <- c( idx, lapply(seq_along(theDots), function(argPos){
               if(symbols[argPos] != character(1L)){
                 eval(theDots[[argPos]])
               }else{
@@ -46,13 +57,24 @@ setMethod("getData",
 
 setMethod("[<-",
           signature(x = "h5array", i = "ANY", j = "ANY"),
-          function(x, i = NULL, j = NULL, ..., value){
+          function(x, i, j, ..., value){
             symbols <- sapply(dots(...), deparse)
             if(length(symbols) + 2 != length(dim(x))){
               stop("incorrect number of dimensions")
             }
             theDots <- dots(...)
-            idx <- c( list(i,j), lapply(seq_along(theDots), function(argPos){
+            idx <- vector("list", 2)
+            if(!missing(i)){
+              idx[[1]] <- i
+            }else{
+              i <- NULL
+            }
+            if(!missing(j)){
+              idx[[2]] <- j
+            }else{
+              j <- NULL
+            }
+            idx <- c( idx, lapply(seq_along(theDots), function(argPos){
               if(symbols[argPos] != character(1L)){
                 eval(theDots[[argPos]])
               }else{
