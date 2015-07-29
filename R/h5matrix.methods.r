@@ -1,29 +1,3 @@
-setClass("h5matrix", representation(
-  file = "character",
-  location = "character",
-  dimnames = "listOrNULL"
-),
-prototype(
-  file = tempfile(),
-  location = "Data",
-  dimnames = NULL
-))
-
-h5matrix <- function( fn, location ){
-  stopifnot(file.exists(fn)) # Need more sanity checks here
-  ret = new("h5matrix", file = fn, location = location)
-  stopifnot(length(dim(ret)) == 2) #Matrix has exactly two dimensions
-  return(ret)
-}
-
-h5matrixCreate <- function( fn, location, dim, storage.mode, ... ){
-  stopifnot(length(dim) == 2) #Matrix has exactly two dimensions
-  if(!file.exists(fn)){
-    h5createFile(fn)
-  }
-  h5createDataset(fn, location, dims = dim, storage.mode = storage.mode, ...)
-  new("h5matrix", file = fn, location = location)
-}
 
 setMethod("[",
           signature(x = "h5matrix", i = "ANY", j = "ANY"),
@@ -107,21 +81,4 @@ setMethod("head","h5matrix",function(x){
     cols <- seq(ncol)
   }
   x[rows,cols]
-})
-
-setMethod("head","h5array",function(x){
-  nrow = dim(x)[[1]]
-  ncol = dim(x)[[2]]
-  if(nrow > 6){
-    rows <- 1:6
-  }else{
-    rows <- seq(nrow)
-  }
-  if(ncol > 6){
-    cols <- 1:6
-  }else{
-    cols <- seq(ncol)
-  }
-  arglist <- c( list(getData, x, rows, cols), as.list(rep(1, length(dim(x)) - 2)) )
-  eval(as.call(arglist))
 })

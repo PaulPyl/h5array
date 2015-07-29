@@ -1,5 +1,3 @@
-require(rhdf5)
-require(pryr)
 setClassUnion(name = "listOrNULL", members = c("list", "NULL"))
 
 setClass("h5array", representation(
@@ -53,4 +51,3 @@ setMethod("apply",
               FUN(tmp, ...)
             })
           })
-source("h5array.accessors.r")
