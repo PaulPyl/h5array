@@ -2,7 +2,7 @@
 \alias{getFileName}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Get the filename of the underlying HDF5 files.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~

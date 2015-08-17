@@ -7,4 +7,11 @@ Author: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>
 Maintainer: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>
 Description: This package provides two classes (h5array and h5matrix) which can be used like normal arrays or matrices, but store their data on disk in an HDF5 file. This is usefull for realy big datasets.
 License: GPL >= 3
+Import: methods, rhdf5, pryr
 Depends: methods, rhdf5, pryr
+Collate:
+  "h5matrix.r"
+  "h5array.r"
+  "h5array.methods.r"
+  "h5matrix.methods.r"
+  "common.methods.r"

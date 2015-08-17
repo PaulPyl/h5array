@@ -2,10 +2,10 @@
 \alias{h5matrix}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Constructor of the h5matrix class.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+
 }
 \usage{
 h5matrix(fn, location)

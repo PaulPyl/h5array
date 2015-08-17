@@ -2,7 +2,7 @@
 \alias{h5array}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Constructor of the h5array class.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~

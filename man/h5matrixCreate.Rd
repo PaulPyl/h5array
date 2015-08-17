@@ -2,7 +2,7 @@
 \alias{h5matrixCreate}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Function to create a new h5matrix object in an HDF5 file.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
