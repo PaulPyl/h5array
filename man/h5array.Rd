@@ -45,16 +45,10 @@ h5array(fn, location)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (fn, location) 
-{
-    stopifnot(file.exists(fn))
-    new("h5array", file = fn, location = location)
-  }
+fn <- tempfile()
+h5arrayCreate(fn, "/Data", c(12,3), "double")
+x <- h5array(fn, "/Data")
+x
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

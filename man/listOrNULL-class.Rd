@@ -5,7 +5,7 @@
 
 \title{Class \code{"listOrNULL"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+This is a class union to represent a \code{list} or \code{NULL}. It is used for the dimnames of \code{h5array} and \code{h5matrix} objects, which can be a \code{list} of the same length as the dimensions themselves, or \code{NULL}.
 }
 \section{Objects from the Class}{A virtual Class: No objects may be created from it.}
 \section{Methods}{

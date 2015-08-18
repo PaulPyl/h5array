@@ -32,5 +32,11 @@ Maintainer: \packageMaintainer{h5array}
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-~~ simple examples of the most important functions ~~
+fn <- tempfile()
+x <- h5arrayCreate(fn, "/Data", c(12,3), "double")
+y <- h5array(fn, "/Data") #pointing to the same location in the HDF5 file
+x
+y[1,] <- 23 #assignment to y
+y #y is changed
+x #x is also changed
 }
