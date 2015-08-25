@@ -1,11 +1,10 @@
 \name{h5array}
 \alias{h5array}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Constructor of the h5array class.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This function creates an \code{h5array} object pointing to the specified location in the specified file. An error is generated should that file not exists.
 }
 \usage{
 h5array(fn, location)

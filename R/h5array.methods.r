@@ -85,11 +85,11 @@ setMethod("[<-",
               vdim <- dim(x)
               vdim[!sapply(idx, is.null)] <- sapply(idx[!sapply(idx, is.null)], length)
               vsize <- Reduce(function(a,b) a*b, vdim)
-              if(vsize > 1e6){
+              if(vsize > 1e4){
                 message(paste(
                   "Single value assignment used on a large slice (",
                   vsize,
-                  " elements), this might be memory intensive and take a long time.", sep = ""))
+                  " elements), this might be memory intensive and take a long time. Consider writing in chunks instead.", sep = ""))
               }
               value <- array(value, vdim)
             }
