@@ -45,20 +45,5 @@ h5matrix(fn, location)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (fn, location) 
-{
-    stopifnot(file.exists(fn))
-    ret = new("h5matrix", file = fn, location = location)
-    stopifnot(length(dim(ret)) == 2)
-    return(ret)
-  }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

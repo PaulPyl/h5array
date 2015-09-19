@@ -39,22 +39,14 @@ getFileName(object)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{link{getLocation}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object) 
-{
-    standardGeneric("getFileName")
-  }, generic = structure("getFileName", package = "h5array"), package = "h5array", group = list(), valueClass = character(0), signature = "object", default = `\001NULL\001`, skeleton = (function (object) 
-stop("invalid call in method dispatch to 'getFileName' (no default method)", 
-    domain = NA))(object), class = structure("nonstandardGenericFunction", package = "methods"))
+x <- h5matrixCreate(
+      file.path(tempdir(), "this.is.the.file.name.txt"),
+      "This/Is/The/Location", c(10,10), "double",
+      fillValue = 42)
+x
+getFileName(x)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

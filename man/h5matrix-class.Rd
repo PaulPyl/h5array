@@ -2,8 +2,8 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{h5matrix-class}
-\alias{[,h5matrix,ANY-method}
-\alias{[<-,h5matrix,ANY,ANY,ANY-method}
+\alias{[,h5matrix-method}
+\alias{[<-,h5matrix-method}
 \alias{head,h5matrix-method}
 \alias{show,h5matrix-method}
 
@@ -21,6 +21,9 @@ Objects can be created by calls of the form \code{new("h5matrix", ...)}.
     \item{\code{location}:}{Object of class \code{"character"} ~~ }
     \item{\code{dimnames}:}{Object of class \code{"listOrNULL"} ~~ }
   }
+}
+\section{Extends}{
+Class \code{"\linkS4class{h5arrayOrMatrix}"}, directly.
 }
 \section{Methods}{
   \describe{

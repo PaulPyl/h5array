@@ -1,5 +1,3 @@
-setClassUnion(name = "listOrNULL", members = c("list", "NULL"))
-
 setClass("h5array", representation(
   file = "character",
   location = "character",

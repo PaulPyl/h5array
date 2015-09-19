@@ -1,3 +1,4 @@
+setClassUnion(name = "listOrNULL", members = c("list", "NULL"))
 setClass("h5matrix", representation(
   file = "character",
   location = "character",
@@ -20,6 +21,14 @@ h5matrixCreate <- function( fn, location, dim, storage.mode, ... ){
   stopifnot(length(dim) == 2) #Matrix has exactly two dimensions
   if(!file.exists(fn)){
     h5createFile(fn)
+  }
+  loc <- strsplit(x = location, split = "/")[[1]]
+  if(length(loc) > 1){
+    current = ""
+    for(subloc in loc[1:(length(loc)-1)]){
+      current = paste0( current, subloc, sep = "/")
+      h5createGroup(fn, current)
+    }
   }
   h5createDataset(fn, location, dims = dim, storage.mode = storage.mode, ...)
   new("h5matrix", file = fn, location = location)

@@ -5,7 +5,7 @@
 Function to create a new h5matrix object in an HDF5 file.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This function creates a new h5matrix object in an HDF5 file, creating the file if it doesnt exists and the specified dataset within it.
 }
 \usage{
 h5matrixCreate(fn, location, dim, storage.mode, ...)
@@ -13,64 +13,28 @@ h5matrixCreate(fn, location, dim, storage.mode, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{fn}{
-%%     ~~Describe \code{fn} here~~
+Filename for the HDF5 file.
 }
   \item{location}{
-%%     ~~Describe \code{location} here~~
+Location of the dataset wihtin the HDF5 file, this should be unique.
 }
   \item{dim}{
-%%     ~~Describe \code{dim} here~~
+The dimensions of the dataset
 }
   \item{storage.mode}{
-%%     ~~Describe \code{storage.mode} here~~
+  Storage mode of the dataset, see \code{\link[rhdf5]{h5createDataset}} for details, typically this will be one of \code{"double"}, \code{"character"}, \code{"integer"}.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+  Any additional parameters to \code{\link[rhdf5]{h5createDataset}} go here, e.g. \code{chunk} or \code{fillValue}
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+A \code{h5matrix} object pointing to the specified location in the specified file.
 }
 \author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+Paul Theodor Pyl
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (fn, location, dim, storage.mode, ...) 
-{
-    stopifnot(length(dim) == 2)
-    if (!file.exists(fn)) {
-        h5createFile(fn)
-    }
-    h5createDataset(fn, location, dims = dim, storage.mode = storage.mode, 
-        ...)
-    new("h5matrix", file = fn, location = location)
-  }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

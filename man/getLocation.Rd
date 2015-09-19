@@ -5,7 +5,7 @@
 Get the location of the dataset in the underlying HDF5 file.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This function returns the HDF5-internal path to the dataset that the \code{h5array} / \code{h5matrix} points to, this is *not* the path to the file containign the data, but rather a path *within* that file.
 }
 \usage{
 getLocation(object)
@@ -13,48 +13,23 @@ getLocation(object)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
-%%     ~~Describe \code{object} here~~
+  An object of class \code{h5array} or \code{h5matrix}
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+A \code{character} containing the location of the dataset.
 }
 \author{
-%%  ~~who you are~~
+Paul Theodor Pyl
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{link{getFileName}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-structure(function (object) 
-{
-    standardGeneric("getLocation")
-  }, generic = structure("getLocation", package = "h5array"), package = "h5array", group = list(), valueClass = character(0), signature = "object", default = `\001NULL\001`, skeleton = (function (object) 
-stop("invalid call in method dispatch to 'getLocation' (no default method)", 
-    domain = NA))(object), class = structure("nonstandardGenericFunction", package = "methods"))
+x <- h5matrixCreate(tempfile(), "This/Is/The/Location", c(10,10), "double", fillValue = 42)
+x
+getLocation(x) #Note the leading "/"", indicating that this
+               #location is a child of the root location wihtin the HDF5 file
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

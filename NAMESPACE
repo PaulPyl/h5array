@@ -20,3 +20,6 @@ exportClasses(
     "h5matrix",
     "listOrNULL"
 )
+import(rhdf5)
+import(methods)
+import(pryr)

@@ -1,6 +1,5 @@
 \name{h5array-package}
 \alias{h5array-package}
-\alias{h5array}
 \docType{package}
 \title{
 \packageTitle{h5array}
