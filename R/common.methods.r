@@ -78,7 +78,6 @@ setMethod("dimnames",
           function(x){
             x@dimnames
           })
-<<<<<<< HEAD
 # setGeneric("loadDimnamesFromFile", function(object){standardGeneric("loadDimnamesFromFile")})
 # setMethod("loadDimnamesFromFile",
 #           "h5arrayOrMatrix",
@@ -96,26 +95,6 @@ setMethod("dimnames",
 #               h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
 #             }
 #           })
-=======
-setGeneric("loadDimnamesFromFile", function(object){standardGeneric("loadDimnamesFromFile")})
-setMethod("loadDimnamesFromFile",
-          "h5arrayOrMatrix",
-          function(x){
-            dn <- lapply(seq(length(dim(x))), function(i){
-              h5read(file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
-            }
-            #ToDo: Sanity check here?!
-            x@dimnames <- dn
-          })
-setGeneric("writeDimnamesToFile", function(object){standardGeneric("writeDimnamesToFile")})
-setMethod("writeDimnamesToFile",
-          "h5arrayOrMatrix",
-          function(x){
-            for(i in seq(length(dim(x)))){
-              h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
-            }
-          })
->>>>>>> 2ea0e9899cda37c4fd8ee8cb81d13b70e331a79e
 setMethod("print","h5arrayOrMatrix",function(x){
   show(x)
 })
