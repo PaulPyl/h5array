@@ -122,3 +122,20 @@ setMethod("head","h5array",function(x){
   arglist <- c( list(getData, x, rows, cols), as.list(rep(1, length(dim(x)) - 2)) )
   eval(as.call(arglist))
 })
+
+setMethod("tail","h5array",function(x){
+  nrow = dim(x)[[1]]
+  ncol = dim(x)[[2]]
+  if(nrow > 6){
+    rows <- seq(nrow - 6, nrow)
+  }else{
+    rows <- seq(nrow)
+  }
+  if(ncol > 6){
+    cols <- seq(ncol - 6, ncol)
+  }else{
+    cols <- seq(ncol)
+  }
+  arglist <- c( list(getData, x, rows, cols), as.list(rep(1, length(dim(x)) - 2)) )
+  eval(as.call(arglist))
+})

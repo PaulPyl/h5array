@@ -82,3 +82,19 @@ setMethod("head","h5matrix",function(x){
   }
   x[rows,cols]
 })
+
+setMethod("tail","h5matrix",function(x){
+  nrow = dim(x)[[1]]
+  ncol = dim(x)[[2]]
+  if(nrow > 6){
+    rows <- seq(nrow - 6, nrow)
+  }else{
+    rows <- seq(nrow)
+  }
+  if(ncol > 6){
+    cols <- seq(ncol - 6, ncol)
+  }else{
+    cols <- seq(ncol)
+  }
+  x[rows,cols]
+})
