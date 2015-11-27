@@ -1,7 +1,7 @@
 Package: h5array
 Type: Package
 Title: Implementation of HDF5-backed matrix and array classes
-Version: 1.0
+Version: 1.0.2
 Date: 2015-07-29
 Author: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>
 Maintainer: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>

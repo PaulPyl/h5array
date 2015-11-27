@@ -24,7 +24,17 @@ setMethod("getLocation",
           "h5arrayOrMatrix",
           function(object){return(object@location)}
 )
-
+setGeneric("getGroup", function(object){standardGeneric("getGroup")})
+setMethod("getGroup",
+          "h5arrayOrMatrix",
+          function(object){
+            tmp <- strsplit(object@location, split = "/")[[1]]
+            if(tmp[1] != ""){
+              tmp <- c("", tmp)
+            }
+            paste(tmp[1:(length(tmp)-1)], collapse = "/")
+          }
+)
 setMethod("apply",
           signature(X = "h5arrayOrMatrix", MARGIN = "numeric", FUN = "function"),
           function(X, MARGIN, FUN, ...){
@@ -68,6 +78,23 @@ setMethod("dimnames",
           function(x){
             x@dimnames
           })
+# setGeneric("loadDimnamesFromFile", function(object){standardGeneric("loadDimnamesFromFile")})
+# setMethod("loadDimnamesFromFile",
+#           "h5arrayOrMatrix",
+#           function(x){
+#             dn <- lapply(seq(length(dim(x))), function(i){
+#               h5read(file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
+#             }
+#             x@dimnames <- dn
+#           })
+# setGeneric("writeDimnamesToFile", function(object){standardGeneric("writeDimnamesToFile")})
+# setMethod("writeDimnamesToFile",
+#           "h5arrayOrMatrix",
+#           function(x){
+#             for(i in seq(length(dim(x)))){
+#               h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
+#             }
+#           })
 setMethod("print","h5arrayOrMatrix",function(x){
   show(x)
 })
