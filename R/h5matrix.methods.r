@@ -63,7 +63,7 @@ setMethod("show","h5matrix",function(object){
     paste("Dimensions:", paste(dim(object), collapse=", ")), "\n",
     paste("File:", getFileName(object)), "\n"
   ), cat)
-  cat("Data:\n")
+  cat("Head of Data:\n")
   print(head(object))
 })
 
