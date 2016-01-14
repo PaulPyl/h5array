@@ -10,18 +10,28 @@ setMethod("[",
             theDots <- dots(...)
             idx <- vector("list", 2)
             if(!missing(i)){
+              if(is.character(i)){
+                i <- match(i, rownames(x))
+              }
               idx[[1]] <- i
             }else{
               i <- NULL
             }
             if(!missing(j)){
+              if(is.character(j)){
+                j <- match(j, colnames(x))
+              }
               idx[[2]] <- j
             }else{
               j <- NULL
             }
             idx <- c( idx, lapply(seq_along(theDots), function(argPos){
               if(symbols[argPos] != character(1L)){
-                eval(theDots[[argPos]])
+                k <- eval(theDots[[argPos]])
+                if(is.character(k)){
+                  k <- match(k, dimnames(x)[[argPos+2]])
+                }
+                k
               }else{
                 NULL
               }

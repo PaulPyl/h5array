@@ -67,9 +67,6 @@ setMethod("typeof",
 setMethod("dimnames<-",
           "h5arrayOrMatrix",
           function(x, value){
-            if(any(sapply(value[!sapply(value, is.null)], length) != dim(x)[!sapply(value, is.null)])){
-              stop("Dimnames must have the same shape as the array!")
-            }
             x@dimnames <- value
             x
           })
@@ -78,23 +75,55 @@ setMethod("dimnames",
           function(x){
             x@dimnames
           })
-# setGeneric("loadDimnamesFromFile", function(object){standardGeneric("loadDimnamesFromFile")})
-# setMethod("loadDimnamesFromFile",
-#           "h5arrayOrMatrix",
-#           function(x){
-#             dn <- lapply(seq(length(dim(x))), function(i){
-#               h5read(file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
-#             }
-#             x@dimnames <- dn
-#           })
-# setGeneric("writeDimnamesToFile", function(object){standardGeneric("writeDimnamesToFile")})
-# setMethod("writeDimnamesToFile",
-#           "h5arrayOrMatrix",
-#           function(x){
-#             for(i in seq(length(dim(x)))){
-#               h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))
-#             }
-#           })
+setGeneric("loadDimnamesFromFile", function(x){standardGeneric("loadDimnamesFromFile")})
+setMethod("loadDimnamesFromFile",
+          "h5arrayOrMatrix",
+          function(x){
+            f <- H5Fopen(getFileName(x), flags = "H5F_ACC_RDONLY")
+            if(getGroup(x) != ""){
+              l <- H5Gopen(getGroup(x))
+            }else{
+              l <- f
+            }
+            dn <- lapply(seq(length(dim(x))), function(i){
+              if(H5Lexists(l, paste0("dim", i))){
+                suppressWarnings(h5read(file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))) #Quick-fix since we know that f is read-only and wont mess up things here
+              }else{
+                NULL
+              }
+            })
+            H5close()
+            x@dimnames <- dn
+            x
+          })
+setGeneric("writeDimnamesToFile", function(x){standardGeneric("writeDimnamesToFile")})
+setMethod("writeDimnamesToFile",
+          "h5arrayOrMatrix",
+          function(x){
+            f <- H5Fopen(getFileName(x))
+            if(getGroup(x) != ""){
+              l <- H5Gopen(getGroup(x))
+            }else{
+              l <- f
+            }
+            for(i in seq(length(dim(x)))){
+              if(!is.null(x@dimnames[[i]])){
+                if(!H5Lexists(l, paste0("dim", i))){
+                  suppressWarnings( #Ugly hack until I can migrate to internal H5-function calls :)
+                    h5createDataset(
+                      file = getFileName(x),
+                      dataset = paste( getGroup(x), paste0("dim", i), sep = "/"),
+                      dims = c(length(x@dimnames[[i]])),
+                      storage.mode = "character",
+                      size = 100
+                    )
+                  )
+                }
+                suppressWarnings(h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/")))
+              }
+            }
+            H5close()
+          })
 setMethod("print","h5arrayOrMatrix",function(x){
   show(x)
 })

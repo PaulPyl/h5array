@@ -4,11 +4,17 @@ setMethod("[",
           function(x, i, j, ..., drop = TRUE){
             idx <- vector("list", 2)
             if(!missing(i)){
+              if(is.character(i)){
+                i <- match(i, rownames(x))
+              }
               idx[[1]] <- i
             }else{
               i <- NULL
             }
             if(!missing(j)){
+              if(is.character(j)){
+                j <- match(j, colnames(x))
+              }
               idx[[2]] <- j
             }else{
               j <- NULL
