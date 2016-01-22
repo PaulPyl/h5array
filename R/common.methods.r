@@ -35,6 +35,14 @@ setMethod("getGroup",
             paste(tmp[1:(length(tmp)-1)], collapse = "/")
           }
 )
+setGeneric("getDatasetName", function(object){standardGeneric("getDatasetName")})
+setMethod("getDatasetName",
+          "h5arrayOrMatrix",
+          function(object){
+            tmp <- strsplit(object@location, split = "/")[[1]]
+            tmp[length(tmp)]
+          }
+)
 setMethod("apply",
           signature(X = "h5arrayOrMatrix", MARGIN = "numeric", FUN = "function"),
           function(X, MARGIN, FUN, ...){
@@ -86,8 +94,8 @@ setMethod("loadDimnamesFromFile",
               l <- f
             }
             dn <- lapply(seq(length(dim(x))), function(i){
-              if(H5Lexists(l, paste0("dim", i))){
-                suppressWarnings(h5read(file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/"))) #Quick-fix since we know that f is read-only and wont mess up things here
+              if(H5Lexists(l, paste(getDatasetName(x), paste0("dim", i), sep = "."))){
+                suppressWarnings(h5read(file = getFileName(x), name = paste(getLocation(x), paste0("dim", i), sep = "."))) #Quick-fix since we know that f is read-only and wont mess up things here
               }else{
                 NULL
               }
@@ -108,18 +116,18 @@ setMethod("writeDimnamesToFile",
             }
             for(i in seq(length(dim(x)))){
               if(!is.null(x@dimnames[[i]])){
-                if(!H5Lexists(l, paste0("dim", i))){
+                if(!H5Lexists(l, paste(getDatasetName(x), paste0("dim", i), sep = "."))){
                   suppressWarnings( #Ugly hack until I can migrate to internal H5-function calls :)
                     h5createDataset(
                       file = getFileName(x),
-                      dataset = paste( getGroup(x), paste0("dim", i), sep = "/"),
+                      dataset = paste(getLocation(x), paste0("dim", i), sep = "."),
                       dims = c(length(x@dimnames[[i]])),
                       storage.mode = "character",
                       size = 100
                     )
                   )
                 }
-                suppressWarnings(h5write(x@dimnames[[i]], file = getFileName(x), name = paste( getGroup(x), paste0("dim", i), sep = "/")))
+                suppressWarnings(h5write(x@dimnames[[i]], file = getFileName(x), name = paste(getLocation(x), paste0("dim", i), sep = ".")))
               }
             }
             H5close()

@@ -1,0 +1,91 @@
+---
+title: "h5array Introduction"
+author: "Paul Theodor Pyl"
+date: "22 Jan 2016"
+output: pdf_document
+---
+
+This vignette introduces the `h5array` R/Bioconductor package, which provides `array`- and `matrix`-like objects that store their data in HDF5 files on disk while being useable with the same interface as normal `array` and `matrix` objects.
+
+The following code block illustrates basic usage of the package:
+
+```{r, echo=FALSE, warning=FALSE}
+suppressPackageStartupMessages(require(h5array))
+suppressPackageStartupMessages(require(rhdf5))
+```
+
+The `h5arrayCreate` and `h5matrixCreate` functions are used to create `h5array` and `h5matrix` objects, these functions are only called once to create the dataset in the HDF5 file on disk.
+```{r}
+filename = tempfile()
+x <- h5matrixCreate(
+  filename,
+  location = "/NumericMatrix",
+  dim = c(1e5, 1e3), storage.mode = "double",
+  chunk = c(1e3, 1e2))
+x[1:23,] <- matrix(rnorm(23*1e3), nrow = 23)
+```
+
+We can user the `rhdf5::h5ls` function to inspect the HDF5-file that was created and see which datasets have been created within it:
+```{r}
+h5ls(filename)
+```
+
+The `h5matrixCreate` and `h5arrayCreate` function hand over any additional arguments to the internal `h5createDataset` function from the `rhdf5` package, therefore things like storage mode and chunking can be configured as well. If you are unfamiliar with storage modes and chunking it might help to have a look at the `rhdf5` vignette as well.
+
+Let's create a string array in the same file:
+```{r}
+y <- h5arrayCreate(
+  filename, #same file
+  location = "/CharArray", #New location
+  dim = c(3, 4, 5), #since we want 3d data we need to use the h5array class
+  storage.mode = "character",
+  size = 256 #to store strings in HDF5 files we need to specify the maximum length
+  )
+y[,,1] <- matrix(sample(letters, size = 3*4), nrow = 3)
+```
+
+Investigating the file again we can see the new dataset has been created.
+```{r}
+h5ls(filename)
+```
+
+We can also `print` the objects to get a descriptive representation of them:
+```{r}
+print(x)
+print(y)
+```
+
+Adding dimension names is straightforward:
+```{r}
+dimnames(y) <- list(
+  letters[1:3],
+  letters[4:8],
+  letters[9:14]
+  )
+print(y)
+```
+
+Dimension names are not stored in the HDF5 file by default but can be written there:
+```{r}
+writeDimnamesToFile(y)
+h5ls(filename)
+```
+
+Note how new datasets to store the dimension names have been created.
+
+Once the underlying datasets have been created the actual `h5array` or `h5matrix` objects can be removed (e.g. when closing the R session) and the data can be accessed usign the `h5array` and `h5matrix` functions:
+
+```{r}
+rm(x)
+rm(y)
+a <- h5matrix(filename, "/NumericMatrix")
+b <- h5array(filename, "/CharArray")
+print(a)
+print(b)
+```
+
+We can load the dimnames from the file as well:
+```{r}
+b <- loadDimnamesFromFile(b)
+print(b)
+```
