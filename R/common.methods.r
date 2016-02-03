@@ -55,16 +55,24 @@ setMethod("apply",
               if (anyNA(MARGIN)) 
                 stop("not all elements of 'MARGIN' are names of dimensions")
             }
-            accessor <- array(vector(mode="list", length = 1L), c(3, prod(dim(X)[MARGIN]))) # number of elements in the return value
-            sapply(MARGIN, function(margin){
-              sapply(seq(dim(X)[margin]), function(idx){
-                idxList <- accessor
-                idxList[[margin]] <- idx
-                tmp <- h5read(X@file, X@location, index = idxList)
-                dim(tmp) <- dim(tmp)[dim(tmp) != 1] #dropping dims of length 1, this should be controllable by an argument
-                FUN(tmp, ...)
-              })
-            })
+            #accessor <- array(vector(mode="list", length = 1L), c(3, prod(dim(X)[MARGIN]))) # number of elements in the return value
+            accessor <- vector(mode="list", length = length(dim(X)))
+            accessor[MARGIN] <- 1
+            #res <- array(FUN(h5read(X@file, X@location, index = accessor)), dim = dim(X)[MARGIN])
+            res <- vector(mode = class(FUN(h5read(X@file, X@location, index = accessor))), length = prod(dim(X)[MARGIN]))
+            accessor <- vector(mode="list", length = length(dim(X)))
+            resDim <- dim(X)[MARGIN]
+            #BEGIN: slow looping implementation of apply ... move to chunks?
+            i = 1
+            while(i <= length(res)){
+              idxList <- accessor
+              idxList[MARGIN] <- as.vector(arrayInd(i, resDim))
+              tmp <- h5read(X@file, X@location, index = idxList)
+              dim(tmp) <- dim(tmp)[dim(tmp) != 1] #dropping dims of length 1, this should be controllable by an argument
+              res[i] <- FUN(tmp, ...)
+              i <- i + 1
+            }
+            array(res, dim = resDim)
           })
 
 setMethod("typeof",

@@ -2,12 +2,23 @@
 title: "h5array Introduction"
 author: "Paul Theodor Pyl"
 date: "22 Jan 2016"
-output: pdf_document
+output: html_document
 ---
 
 This vignette introduces the `h5array` R/Bioconductor package, which provides `array`- and `matrix`-like objects that store their data in HDF5 files on disk while being useable with the same interface as normal `array` and `matrix` objects.
 
-The following code block illustrates basic usage of the package:
+Installation
+------------
+
+Installation from github is easiest using devtools.
+```{r, eval = FALSE}
+install.packages("devtools") # If you do not have it yet
+require(devtools)
+install_github("PaulPyl/h5array")
+```
+
+Basic Usage
+-----------
 
 ```{r, echo=FALSE, warning=FALSE}
 suppressPackageStartupMessages(require(h5array))
@@ -15,14 +26,15 @@ suppressPackageStartupMessages(require(rhdf5))
 ```
 
 The `h5arrayCreate` and `h5matrixCreate` functions are used to create `h5array` and `h5matrix` objects, these functions are only called once to create the dataset in the HDF5 file on disk.
+The following code block illustrates basic usage of the package:
 ```{r}
 filename = tempfile()
 x <- h5matrixCreate(
   filename,
   location = "/NumericMatrix",
-  dim = c(1e5, 1e3), storage.mode = "double",
-  chunk = c(1e3, 1e2))
-x[1:23,] <- matrix(rnorm(23*1e3), nrow = 23)
+  dim = c(1e3, 1e2), storage.mode = "double",
+  chunk = c(1, 1e2))
+x[1:23,] <- matrix(rnorm(23*1e2), nrow = 23)
 ```
 
 We can user the `rhdf5::h5ls` function to inspect the HDF5-file that was created and see which datasets have been created within it:
@@ -88,4 +100,26 @@ We can load the dimnames from the file as well:
 ```{r}
 b <- loadDimnamesFromFile(b)
 print(b)
+```
+
+We can apply functions to those objects without having to change code that was written for normal arrays or matrices:
+```{r}
+for( i in seq(1, nrow(a))){ #populating the numeric matrix in chunks
+  a[i,] <- rnorm(1e3, mean = i %% 80, sd = sqrt(i))
+}
+print(a)
+
+plot(unlist( apply(a, 1, mean) ))
+```
+
+```{r}
+c <- h5arrayCreate(
+  filename, #same file
+  location = "/IntArray", #New location
+  dim = c(3, 4, 5), #since we want 3d data we need to use the h5array class
+  storage.mode = "integer"
+  )
+c[1,,] <- matrix(rpois(4*5, 23), nrow = 4)
+c[2,,] <- matrix(rpois(4*5, 42), nrow = 4)
+c[3,,] <- matrix(rpois(4*5, 87), nrow = 4)
 ```
