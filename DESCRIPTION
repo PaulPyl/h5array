@@ -1,17 +1,18 @@
 Package: h5array
 Type: Package
 Title: Implementation of HDF5-backed matrix and array classes
-Version: 1.0.3
+Version: 1.0.4
 Date: 2015-07-29
 Author: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>
 Maintainer: Paul Theodor Pyl <paul.theodor.pyl@gmail.com>
 Description: This package provides two classes (h5array and h5matrix) which can be used like normal arrays or matrices, but store their data on disk in an HDF5 file. This is usefull for realy big datasets.
 License: GPL
-Import: methods, rhdf5, pryr
-Depends: methods, rhdf5, pryr
+Import: methods, rhdf5, pryr, hash
+Depends: methods, rhdf5, pryr, hash
 Collate:
   "h5matrix.r"
   "h5array.r"
   "h5array.methods.r"
   "h5matrix.methods.r"
   "common.methods.r"
+Suggests: testthat

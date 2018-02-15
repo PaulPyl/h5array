@@ -1,24 +1,7 @@
-
 setMethod("[",
           signature(x = "h5matrix", i = "ANY", j = "ANY"),
           function(x, i, j, ..., drop = TRUE){
-            idx <- vector("list", 2)
-            if(!missing(i)){
-              if(is.character(i)){
-                i <- match(i, rownames(x))
-              }
-              idx[[1]] <- i
-            }else{
-              i <- NULL
-            }
-            if(!missing(j)){
-              if(is.character(j)){
-                j <- match(j, colnames(x))
-              }
-              idx[[2]] <- j
-            }else{
-              j <- NULL
-            }
+            idx <- makeIndex(x, i, j, NULL)
             ret <- h5read(x@file, x@location, index = idx)
             if(is.null(i)){
               rownames(ret) <- dimnames(x)[[1]]

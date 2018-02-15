@@ -1,5 +1,6 @@
 # Quite some gymnastics to get the arguments right given the default signature of "["
 # I would hope there is a more elegant way of replacing any missing argument with a NULL in the index and making sure that the dimensions fit :(
+
 setMethod("[",
           signature(x = "h5array", i = "ANY", j = "ANY"),
           function(x, i, j, ..., drop = TRUE){
@@ -8,34 +9,7 @@ setMethod("[",
               stop("incorrect number of dimensions")
             }
             theDots <- dots(...)
-            idx <- vector("list", 2)
-            if(!missing(i)){
-              if(is.character(i)){
-                i <- match(i, rownames(x))
-              }
-              idx[[1]] <- i
-            }else{
-              i <- NULL
-            }
-            if(!missing(j)){
-              if(is.character(j)){
-                j <- match(j, colnames(x))
-              }
-              idx[[2]] <- j
-            }else{
-              j <- NULL
-            }
-            idx <- c( idx, lapply(seq_along(theDots), function(argPos){
-              if(symbols[argPos] != character(1L)){
-                k <- eval(theDots[[argPos]])
-                if(is.character(k)){
-                  k <- match(k, dimnames(x)[[argPos+2]])
-                }
-                k
-              }else{
-                NULL
-              }
-            }) )[seq(length(dim(x)))]
+            idx <- makeIndex(x, i, j, theDots)
             ret <- h5read(x@file, x@location, index = idx)
             dimnames(ret) <- lapply(seq_along(dim(x)), function(theDim){
               tmp <- dimnames(x)[[theDim]]

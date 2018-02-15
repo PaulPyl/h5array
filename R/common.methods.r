@@ -24,6 +24,7 @@ setMethod("getLocation",
           "h5arrayOrMatrix",
           function(object){return(object@location)}
 )
+
 setGeneric("getGroup", function(object){standardGeneric("getGroup")})
 setMethod("getGroup",
           "h5arrayOrMatrix",
@@ -35,6 +36,7 @@ setMethod("getGroup",
             paste(tmp[1:(length(tmp)-1)], collapse = "/")
           }
 )
+
 setGeneric("getDatasetName", function(object){standardGeneric("getDatasetName")})
 setMethod("getDatasetName",
           "h5arrayOrMatrix",
@@ -80,17 +82,20 @@ setMethod("typeof",
           function(x){
             return(typeof(h5read(getFileName(x), getLocation(x), index = lapply(dim(x), function(i) 1))))
           })
+
 setMethod("dimnames<-",
           "h5arrayOrMatrix",
           function(x, value){
             x@dimnames <- value
             x
           })
+
 setMethod("dimnames",
           "h5arrayOrMatrix",
           function(x){
             x@dimnames
           })
+
 setGeneric("loadDimnamesFromFile", function(x){standardGeneric("loadDimnamesFromFile")})
 setMethod("loadDimnamesFromFile",
           "h5arrayOrMatrix",
@@ -112,6 +117,7 @@ setMethod("loadDimnamesFromFile",
             x@dimnames <- dn
             x
           })
+
 setGeneric("writeDimnamesToFile", function(x){standardGeneric("writeDimnamesToFile")})
 setMethod("writeDimnamesToFile",
           "h5arrayOrMatrix",
@@ -140,6 +146,96 @@ setMethod("writeDimnamesToFile",
             }
             H5close()
           })
+
 setMethod("print","h5arrayOrMatrix",function(x){
   show(x)
 })
+
+setGeneric("hashDimnames", function(x){standardGeneric("hashDimnames")})
+setMethod("hashDimnames",
+          "h5arrayOrMatrix",
+          function(x){
+            dn <- lapply(dimnames(x), function(y){
+              hash(y, seq_along(y))
+            })
+            x@hashedDimnames <- dn
+            x
+          })
+
+setGeneric("hashedDimnames", function(x){standardGeneric("hashedDimnames")})
+setMethod("hashedDimnames",
+          "h5arrayOrMatrix",
+          function(x){
+            x@hashedDimnames
+          })
+
+setGeneric("hashedRownames", function(x){standardGeneric("hashedRownames")})
+setMethod("hashedRownames",
+          "h5arrayOrMatrix",
+          function(x){
+            x@hashedDimnames[[1]]
+          })
+
+setGeneric("hashedColnames", function(x){standardGeneric("hashedColnames")})
+setMethod("hashedColnames",
+          "h5arrayOrMatrix",
+          function(x){
+            x@hashedDimnames[[2]]
+          })
+
+setGeneric("isHashed", function(x){standardGeneric("isHashed")})
+setMethod("isHashed",
+          "h5arrayOrMatrix",
+          function(x){
+            !is.null(x@hashedDimnames)
+          })
+
+setGeneric("makeIndex", function(x, i, j, theDots){standardGeneric("makeIndex")})
+setMethod("makeIndex",
+          signature(x = "h5arrayOrMatrix", i = "ANY", j = "ANY", theDots = "listOrNULL"),
+          function(x, i, j, theDots){
+            idx <- vector("list", 2)
+            if(!missing(i)){
+              if(is.character(i)){
+                if(isHashed(x)){
+                  i <- unname(values(hashedRownames(x)[i])[i])
+                }else{
+                  i <- match(i, rownames(x))
+                }
+              }
+              idx[[1]] <- unname(i)
+            }else{
+              i <- NULL
+            }
+            if(!missing(j)){
+              if(is.character(j)){
+                if(isHashed(x)){
+                  j <- unname(values(hashedColnames(x)[j])[j])
+                }else{
+                  j <- match(j, colnames(x))
+                }
+              }
+              idx[[2]] <- unname(j)
+            }else{
+              j <- NULL
+            }
+            if(!is.null(theDots)){
+              idx <- c( idx, lapply(seq_along(theDots), function(argPos){
+                if(symbols[argPos] != character(1L)){
+                  k <- eval(theDots[[argPos]])
+                  if(is.character(k)){
+                    if(isHashed(x)){
+                      k <- unname(values(hashedDimnames(x)[[argPos+2]][k])[k])
+                    }else{
+                      k <- unname(match(k, dimnames(x)[[argPos+2]]))
+                    }
+                  }
+                  k
+                }else{
+                  NULL
+                }
+              }) )[seq(length(dim(x)))]
+            }
+            return(idx)
+          }
+)

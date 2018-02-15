@@ -2,12 +2,14 @@ setClassUnion(name = "listOrNULL", members = c("list", "NULL"))
 setClass("h5matrix", representation(
   file = "character",
   location = "character",
-  dimnames = "listOrNULL"
+  dimnames = "listOrNULL",
+  hashedDimnames = "listOrNULL"
 ),
 prototype(
   file = tempfile(),
   location = "Data",
-  dimnames = NULL
+  dimnames = NULL,
+  hashedDimnames = NULL
 ))
 
 h5matrix <- function( fn, location ){
